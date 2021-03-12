@@ -1,12 +1,13 @@
-const searchSong = async() => {
+const searchSong = async () => {
     const searchText = document.getElementById('search-input').value;
     const url = `https://api.lyrics.ovh/suggest/${searchText}`;
+    toggleSpinner();
     try {
         const res = await fetch(url)
         const data = await res.json()
         displaySongs(data.data)
     } catch (error) {
-        errorMsg('Something went wrong! Please try again later...') 
+        errorMsg('Something went wrong! Please try again later...')
     }
 }
 const displaySongs = songs => {
@@ -14,7 +15,7 @@ const displaySongs = songs => {
     songContainer.innerHTML = '';
     songs.forEach(song => {
         const songDiv = document.createElement('div');
-        songDiv.className ='single-result row align-items-center my-3 p-3';
+        songDiv.className = 'single-result row align-items-center my-3 p-3';
         songDiv.innerHTML = `
             <div class="col-md-9">
                 <h3 class="lyrics-name">${song.title}</h3>
@@ -27,6 +28,7 @@ const displaySongs = songs => {
                 <button onclick="getlyric('${song.artist.name}', '${song.title}')" class="btn btn-success">Get Lyrics</button>
             </div>
         `
+        toggleSpinner()
         songContainer.appendChild(songDiv)
     });
 }
@@ -47,4 +49,11 @@ const displayLyrics = lyrics => {
 const errorMsg = error => {
     const errorTag = document.getElementById('error-message')
     errorTag.innerText = error;
+}
+
+const toggleSpinner = () => {
+    const spinner = document.getElementById('spinner');
+    const songs = document.getElementById('song-container');
+    spinner.classList.toggle('d-none')
+    songs.classList.toggle('d-none')
 }
